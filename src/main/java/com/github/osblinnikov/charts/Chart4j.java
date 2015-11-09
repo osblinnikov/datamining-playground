@@ -11,7 +11,7 @@ import static com.googlecode.charts4j.Color.*;
 /**
  * Created by oleg on 08.11.15.
  */
-public class Chart {
+public class Chart4j {
 
     public static double max(List<Double> x){
         double m = Double.MIN_VALUE;
@@ -34,16 +34,19 @@ public class Chart {
     }
 
     public static String createChartUrl(List<Double> x, List<Double> y, String title){
-        XYLine line1 = Plots.newXYLine(DataUtil.scaleWithinRange(min(x),max(x),x), DataUtil.scaleWithinRange(min(y), max(y), y));
+//        System.out.println(Arrays.toString(x.toArray()));
+//        System.out.println(Arrays.toString(y.toArray()));
+        System.out.println(min(x)+" "+max(x)+" "+min(y)+" "+max(y));
+        XYLine line1 = Plots.newXYLine(DataUtil.scaleWithinRange(min(x),max(x),x), DataUtil.scaleWithinRange(min(y),max(y),y));
         line1.setLineStyle(LineStyle.newLineStyle(3, 1, 0));
         line1.setFillAreaColor(LIGHTGREEN);
 
 
         // Defining chart.
-        LineChart chart = GCharts.newLineChart(line1);
+        XYLineChart chart = GCharts.newXYLineChart(line1);
         chart.setSize(600, 450);
         chart.setTitle(title, WHITE, 14);
-
+//
         // Defining axis info and styles
         AxisStyle axisStyle = AxisStyle.newAxisStyle(WHITE, 12, AxisTextAlignment.CENTER);
         AxisLabels yAxis = AxisLabelsFactory.newNumericRangeAxisLabels(min(y), max(y));

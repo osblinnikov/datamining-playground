@@ -15,6 +15,7 @@ class network(in: Int, w: Int, threshold: Int, leak: Float) {
     var lastT = -1
     var sum = 0
     var cntr = 0
+    var lastDiff = -1
     while(t < timeout){
       t = t + 1
       in1.tick()
@@ -24,7 +25,12 @@ class network(in: Int, w: Int, threshold: Int, leak: Float) {
       n1.tick()
 
       if(n1.inFire) {
-        sum += t - lastT
+        val diff = t - lastT
+        if(lastDiff > 0 && diff != lastDiff){
+          println(diff)
+          lastDiff = diff
+        }
+        sum += diff
         lastT = t
         cntr += 1
       }
