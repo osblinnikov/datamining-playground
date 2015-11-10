@@ -3,7 +3,7 @@ package neuron
 /**
  * Created by oleg on 07.11.15.
  */
-class network(in: Int, w: Int, threshold: Int, leak: Float) {
+class network(in: Int, w: Int, threshold: Int, leak: Float=> Float) {
   val in1 = new input(in)
   val w1  = new input(w)
   val n1  = new neuron(threshold,leak)

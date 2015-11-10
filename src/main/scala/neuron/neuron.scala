@@ -1,6 +1,6 @@
 package neuron
 
-class neuron(threshold: Int, leak: Float) {
+class neuron(threshold: Int, leak: Float => Float) {
   require(threshold > 0, "threshold must be greater than zero")
 
   private var inputs: Int = 0
@@ -11,7 +11,7 @@ class neuron(threshold: Int, leak: Float) {
   def tick() = {
     if (inFire || belowZero)
       energy = 0
-    energy += inputs + leak
+    energy += inputs + leak(energy)
     inputs = 0
   }
 

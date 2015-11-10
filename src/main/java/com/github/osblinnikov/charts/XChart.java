@@ -15,7 +15,7 @@ public class XChart {
         ChartsData cd = new ChartsData();
         cd.run();
     }
-    public static void createChart(List<Double> x, List<Double> y, String title){
+    public static void createChart(List<Double> x, List<Double> y, String xTitle, String yTitle, String title){
         double[] xData = new double[x.size()];
         double[] yData = new double[y.size()];
         int i=0;
@@ -28,7 +28,7 @@ public class XChart {
         }
 
         // Create Chart
-        Chart chart = QuickChart.getChart(title, "X", "Y", "y(x)", xData, yData);
+        Chart chart = QuickChart.getChart(title, xTitle, yTitle, yTitle+"("+xTitle+")", xData, yData);
 
         // Show it
         new SwingWrapper(chart).displayChart();
