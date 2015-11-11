@@ -1,11 +1,11 @@
 package com.github.osblinnikov.charts;
 
 import neuron.ChartsData;
-import org.knowm.xchart.Chart;
-import org.knowm.xchart.QuickChart;
-import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.*;
 
+import java.awt.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by oleg on 09.11.15.
@@ -28,7 +28,15 @@ public class XChart {
         }
 
         // Create Chart
-        Chart chart = QuickChart.getChart(title, xTitle, yTitle, yTitle+"("+xTitle+")", xData, yData);
+        Chart chart = QuickChart.getChart(title, xTitle, yTitle, yTitle + "(" + xTitle + ")", xData, yData);
+        for(Map.Entry<String,Series> s : chart.getSeriesMap().entrySet()){
+            Series series = s.getValue();
+            series.setLineColor(SeriesColor.BLUE);
+            series.setMarkerColor(Color.ORANGE);
+            series.setMarker(SeriesMarker.CIRCLE);
+            series.setLineStyle(SeriesLineStyle.SOLID);
+        }
+
 
         // Show it
         new SwingWrapper(chart).displayChart();

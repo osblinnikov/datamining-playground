@@ -17,7 +17,7 @@ class ChartsData {
 
   val constLeak = 0.0f
   val expLeak = -0.01f
-  val expMult = 0.01f
+  val expMult = 0.3f
   def leak(energy: Float): Float = {
     val exp = Math.exp(expMult * energy)
     if(exp != 1.0) {
@@ -30,7 +30,7 @@ class ChartsData {
   var xw = new scala.collection.mutable.ListBuffer[Double]
   var yw = new scala.collection.mutable.ListBuffer[Double]
 
-  def wscan(in: Int) = {
+  def wScan(in: Int) = {
     var w: Float = startF
 
     while(w < endF) {
@@ -43,18 +43,14 @@ class ChartsData {
       }
       w *= 1.1f
     }
-
-    val wurl = XChart.createChart(
-      xw.map(doubleToDouble(_)).asJava,
-      yw.map(doubleToDouble(_)).asJava,
-      "w","out",
-      "out(w, in=" + (1.0 / in) + ",thr="+threshold+",leak="+constLeak+"+"+expLeak+"e^"+expMult+"E)")
   }
+
+  var xin = new scala.collection.mutable.ListBuffer[Double]
+  var yin = new scala.collection.mutable.ListBuffer[Double]
 
   def inScan(w: Int) = {
     var in = startF
-    var xin = new scala.collection.mutable.ListBuffer[Double]
-    var yin = new scala.collection.mutable.ListBuffer[Double]
+
     while(in < endF ){
       val net = new network((Math.round(1/in)).toInt, w, threshold, leak)
       val res : Float = net.run(10000)
@@ -66,22 +62,44 @@ class ChartsData {
       in *= 1.1f
     }
 
-    val inurl = XChart.createChart(
-      xin.map(doubleToDouble(_)).asJava,
-      yin.map(doubleToDouble(_)).asJava,
-      "in","out",
-      "out(in, w="+(1.0/w)+",thr="+threshold+",leak="+constLeak+"+"+expLeak+"e^"+expMult+"E)")
+
   }
 
   def doubleToDouble(a: Double): java.lang.Double = {
     java.lang.Double.valueOf(a)
   }
 
-  def run(): Unit ={
-    wscan(wscan_in)
-    wscan((wscan_in*2).toInt)
-    wscan((wscan_in*4).toInt)
-    wscan((wscan_in*8).toInt)
-    inScan(inscan_w)
+  def run(): Unit= {
+    runW()
+    runIn()
+  }
+
+  def runW(): Unit = {
+    var start = 0.01f
+    val step  = 2f
+    while(start < 1f) {
+      wScan((1/start).toInt)
+      start = start*step
+    }
+    val wurl = XChart.createChart(
+      xw.map(doubleToDouble(_)).asJava,
+      yw.map(doubleToDouble(_)).asJava,
+      "w","out",
+      "out(w, thr="+threshold+",leak="+constLeak+"+"+expLeak+"e^"+expMult+"E)")
+  }
+
+  def runIn(): Unit = {
+    var wstart = 0.01f
+    val wstep  = 2f
+    while(wstart < 0.5f) {
+      inScan((1/wstart).toInt)
+      wstart = wstart*wstep
+    }
+    val inurl = XChart.createChart(
+      xin.map(doubleToDouble(_)).asJava,
+      yin.map(doubleToDouble(_)).asJava,
+      "in","out",
+      "out(in, thr="+threshold+",leak="+constLeak+"+"+expLeak+"e^"+expMult+"E)")
+
   }
 }
