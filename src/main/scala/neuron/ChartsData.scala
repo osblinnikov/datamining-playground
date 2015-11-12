@@ -61,6 +61,24 @@ class ChartsData {
       }
       in *= 1.1f
     }
+  }
+
+  var xthr = new scala.collection.mutable.ListBuffer[Double]
+  var ythr = new scala.collection.mutable.ListBuffer[Double]
+
+  def thrScan(w: Int, in: Int) = {
+    var thr = 1
+
+    while(thr < 30 ){
+      val net = new network(in, w, thr, leak)
+      val res : Float = net.run(10000)
+      if(res != 0) {
+//        println((Math.round(1 / in)).toInt + " " + in + " " + 1 / res)
+        xthr.append(thr.toFloat)
+        ythr.append(1.0/res)
+      }
+      thr += 1
+    }
 
 
   }
@@ -70,8 +88,9 @@ class ChartsData {
   }
 
   def run(): Unit= {
-    runW()
-    runIn()
+//    runW()
+//    runIn()
+    runThr()
   }
 
   def runW(): Unit = {
@@ -86,6 +105,15 @@ class ChartsData {
       yw.map(doubleToDouble(_)).asJava,
       "w","out",
       "out(w, thr="+threshold+",leak="+constLeak+"+"+expLeak+"e^"+expMult+"E)")
+  }
+
+  def runThr(): Unit = {
+    thrScan(inscan_w, wscan_in)
+    val wurl = XChart.createChart(
+      xthr.map(doubleToDouble(_)).asJava,
+      ythr.map(doubleToDouble(_)).asJava,
+      "thr","out",
+      "out(w="+1.0/inscan_w+",in="+1.0/wscan_in+",leak="+constLeak+"+"+expLeak+"e^"+expMult+"E)")
   }
 
   def runIn(): Unit = {
