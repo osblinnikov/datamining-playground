@@ -1,6 +1,6 @@
 package neuron
 
-class neuron(threshold: Int, leak: Float => Float) {
+class neuron(threshold: Int, leak: Float => Float) extends ticker{
   require(threshold > 0, "threshold must be greater than zero")
 
   private var inputs: Int = 0
